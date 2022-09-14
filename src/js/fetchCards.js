@@ -19,9 +19,12 @@ export default class NewApiService {
         }
         return response.json();
       })
-      .then(data => {
+      .then(({ hits, totalHits }) => {
         this.incrementPage();
-        return data.hits;
+        //   console.dir(hits);
+        //   console.dir(totalHits);
+
+        return { hits, totalHits };
       });
   }
 
