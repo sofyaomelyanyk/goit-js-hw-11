@@ -21,8 +21,6 @@ export default class NewApiService {
       })
       .then(({ hits, totalHits }) => {
         this.incrementPage();
-        //   console.dir(hits);
-        //   console.dir(totalHits);
 
         return { hits, totalHits };
       });

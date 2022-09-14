@@ -1,24 +1,27 @@
 import './css/styles.css';
-import 'simplelightbox/dist/simple-lightbox.min.css';
 import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 import NewApiService from './js/fetchCards';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import { createMarkupCars } from './js/createMarkup';
 
-const newApiService = new NewApiService();
-new SimpleLightbox('.gallery a', {
-  navText: ['&#129040;', '&#129042;'],
-});
-
 const formSubmit = document.querySelector('#search-form');
-const buttonLoadMore = document.querySelector('.load-more');
+const buttonLoadMore = document.querySelector('.js-load');
 const gallery = document.querySelector('.gallery');
 
 formSubmit.addEventListener('submit', onSubmitForm);
 buttonLoadMore.addEventListener('click', onInput);
 
+const newApiService = new NewApiService();
+
+var lightbox = new SimpleLightbox('.gallery a', {
+  navText: ['&#129040;', '&#129042;'],
+});
+
 function onSubmitForm(e) {
   e.preventDefault();
+
+  buttonLoadMore.classList.add('is-hidden');
 
   newApiService.query = e.currentTarget.elements.searchQuery.value.trim();
   if (!newApiService.query) {
@@ -29,8 +32,9 @@ function onSubmitForm(e) {
   newApiService.fetchCards().then(cards => {
     clearCards();
     appendCards(cards);
-    buttonLoadMore.removeAttribute('hidden');
+
     if (cards.hits.length) {
+      buttonLoadMore.classList.remove('is-hidden');
       Notify.success(`Hooray! We found ${cards.totalHits} images.`);
       return;
     }
@@ -51,6 +55,7 @@ function onInput() {
 
 function appendCards({ hits, totalHits }) {
   gallery.insertAdjacentHTML('beforeend', createMarkupCars(hits, totalHits));
+  lightbox.refresh();
 }
 
 function clearCards() {
