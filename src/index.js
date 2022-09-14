@@ -53,9 +53,6 @@ function onInput() {
 
     const diff = Math.floor(cards.totalHits / newApiService.page);
 
-    console.log(diff);
-    console.log(newApiService.page);
-
     if (newApiService.page >= diff) {
       buttonLoadMore.classList.add('is-hidden');
       Notify.info("We're sorry, but you've reached the end of search results.");
